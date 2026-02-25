@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
     default : [],
   },
   posts : {
-    type : String,
+    type : Array,
     default : []
   } ,
   following : {
@@ -59,6 +59,6 @@ const userSchema = new mongoose.Schema({
   } 
 }, {timestamps : true} ,);
 
-const User = mongoose.model('user', userschema);
+const User = mongoose.model('user', userSchema);
 
 export default User;

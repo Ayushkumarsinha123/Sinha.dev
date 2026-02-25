@@ -1,6 +1,9 @@
-import { validateLength, validateEmail } from "../helper/validation";
-import User from "../models/user";
-import { generateToken } from "../services/auth";
+import { validateLength, validateEmail } from "../helper/validation.js";
+import User from "../models/user.js";
+import { generateToken } from "../services/auth.js";
+import bcrypt from "bcrypt";
+
+
 
 async function registerUser(req, res) {
   const { name, email, password } = req.body;
@@ -22,7 +25,7 @@ async function registerUser(req, res) {
   }
 
   const check = await User.findOne({ email });
-  if (check) return res.json(400).json({ message: "email already exist" });
+  if (check) return res.status(400).json({ message: "email already exist" });
 
   const hashed_password = await bcrypt.hash(password, 10);
   const newUser = await User.create({
@@ -35,15 +38,14 @@ async function registerUser(req, res) {
   });
 const token = generateToken(
   {
-    id: User._id.toString(),
+    id: newUser._id.toString(),
   },
   "15d",
 );
-
 res.send({
-  id: User._id,
-  name: User.name,
-  picture: User.picture,
+  id: newUser._id,
+  name: newUser.name,
+  picture: newUser.picture,
   token: token,
   message: "user registered!!",
   likes: [],

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import keys from "../config/key";
+import keys from "../config/key.js";
 
 export const generateToken = (payload, expired) => {
   return jwt.sign(
