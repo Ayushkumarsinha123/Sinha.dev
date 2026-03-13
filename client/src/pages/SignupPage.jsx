@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { signupUser } from "../services/authService";
+import {useNavigate} from "react-router-dom"
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FoodPanda from "../assets/FoodPanda.jfif"
-import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import { useAuth } from "../context/AuthContext";
 
 function Signup() {
+
+  const navigate = useNavigate()
+  const { login} = useAuth
     const [form, setForm ] = useState({
       name : "",
       email: "",
@@ -25,7 +34,16 @@ function Signup() {
       try{
         const data = await signupUser(form);
         console.log(data);
+
+        // Save user globally
+      login(data.user, data.token);
         alert("sinup successfull");
+
+        if (form.role === "restaurant") {
+        navigate("/dashboard");
+      } else {
+        navigate("/feed");
+      }
       }
       catch(err){
         console.log(err);
@@ -65,9 +83,35 @@ function Signup() {
                   fullWidth
                 />
           
-          <Button type="submit" variant="contained" >
-  SIGN UP
-</Button>
+          <FormControl>
+              <FormLabel>Who are you?</FormLabel>
+
+              <RadioGroup
+                row
+                name="role"
+                value={form.role}
+                onChange={handleChange}
+              >
+
+                <FormControlLabel
+                  value="customer"
+                  control={<Radio />}
+                  label="Customer"
+                />
+
+                <FormControlLabel
+                  value="restaurant"
+                  control={<Radio />}
+                  label="Restaurant"
+                />
+
+              </RadioGroup>
+
+            </FormControl>
+
+            <Button type="submit" variant="contained" size="large">
+              SIGN UP
+            </Button>
         </form>
         </div>
         <div className="hidden md:block md:w-1/2 h-[500px]">
