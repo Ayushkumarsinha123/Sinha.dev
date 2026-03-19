@@ -13,9 +13,17 @@ const reelSchema = new mongoose.Schema(
       type : String
     } ,
     restaurant: {
-      type: Mongoose.Schema.Types.objectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     } ,
+    dishName: {
+      type: String,
+      required: true
+    },
+    price: {
+      type: Number,
+      required: true
+    },
     like: {
       type : Number,
       default : 0

@@ -39,7 +39,7 @@ var store = new MongoDBStore(
 )
 //routes
 app.use('/api/users', userRouter);
-app.use("/api", reelRoutes);
+app.use('/api/reels', reelRoutes);
 
 app.listen(Port,()=> {
 console.log(`server running on : ${Port}`);
