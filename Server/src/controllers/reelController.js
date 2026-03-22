@@ -116,3 +116,32 @@ export const updateReel = async (req, res) => {
     res.status(500).json({ message: "Failed to update reel", error: error.message });
   }
 };
+
+//seach reel by dish name or title
+export const searchReels = async (req, res) =>{
+  try {
+    const { query } = req.query; // Grabs the word from /api/reels/search?query=pizza
+    if (!query) {
+      return res.status(200).json([]);
+    }
+
+    // Search MongoDB using regex for case-insensitive partial matches
+    const searchResults = await Reel.find({
+      $or: [
+        { dishName: { $regex: query, $options: "i" } }, // 'i' means ignore upper/lowercase
+        { title: { $regex: query, $options: "i" } }
+      ]
+    })
+    .populate({
+      path: "restaurant",
+      select: "name picture",
+      model: User 
+    })
+    .sort({ createdAt: -1 });
+
+    res.status(200).json(searchResults);
+  } catch (error) {
+    console.error("SEARCH ERROR:", error);
+    res.status(500).json({ message: "Search failed", error: error.message });
+  }
+}
