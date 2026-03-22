@@ -65,6 +65,7 @@ const Feed = () => {
         {reels.map((reel) => (
           <Reel
             key={reel._id}
+            _id={reel._id}
             videoUrl={reel.videoUrl}
             dishName={reel.dishName}
             price={reel.price}

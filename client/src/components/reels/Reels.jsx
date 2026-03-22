@@ -2,10 +2,13 @@ import { useRef, useEffect, useState } from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useCart } from "../../context/CartContext"
 
-const Reel = ({ videoUrl, dishName, restaurantName, price }) => {
+const Reel = ({ _id,videoUrl, dishName, restaurantName, price }) => {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const { addToCart } = useCart()
 
   useEffect(() => {
     const options = {
@@ -47,6 +50,17 @@ const Reel = ({ videoUrl, dishName, restaurantName, price }) => {
     }
   };
 
+  const handleOrderClick = (e) => {
+    e.stopPropagation(); 
+    addToCart({
+      _id,
+      dishName,
+      price,
+      restaurantName
+    });
+    alert(`Added ${dishName} to your cart! 🛒`);
+  };
+
   return (
     <div className="relative w-full h-screen snap-start bg-black flex justify-center">
       
@@ -64,7 +78,10 @@ const Reel = ({ videoUrl, dishName, restaurantName, price }) => {
         <h2 className="text-2xl font-bold mb-1">{dishName}</h2>
         <p className="text-sm font-light mb-3">📍 {restaurantName}</p>
         {/* The Magic Button */}
-        <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full w-full flex items-center justify-center gap-2 transition-colors">
+        <button 
+          onClick={handleOrderClick}
+          className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full w-full flex items-center justify-center gap-2 transition-colors active:scale-95"
+        >
           <ShoppingCartIcon />
           Order Now • ₹{price}
         </button>
