@@ -32,3 +32,9 @@ export const updateReel = async (id, updatedData, token) => {
   });
   return response.data;
 }
+
+// search reel
+export const fetchSearchResults = async (searchTerm) => {
+  const response = await axios.get(`${API_URL}/search?query=${searchTerm}`);
+  return response.data;
+};

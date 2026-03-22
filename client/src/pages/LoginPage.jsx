@@ -8,7 +8,7 @@ import { useAuth } from "../context/AuthContext";
 
 
 function Login() {
-  const {login } = useAuth(); // access global login function 
+  const {login } = useAuth(); 
   const navigate = useNavigate();
   const [form, setForm] = useState({
     email: "",
@@ -32,7 +32,7 @@ function Login() {
       // save user globally 
       login(data, data.token);
       alert("Login successful");
-
+      console.log(data);
       if(data.role === "restaurant") {
         navigate('/dashboard');
       } else {

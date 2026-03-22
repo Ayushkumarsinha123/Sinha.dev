@@ -4,6 +4,8 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import ProtectedRoutes from "./components/ProtectedRoute";
 import Feed from "./pages/Feeds";
 import Dashboard from "./pages/Dashboard";
+import Search from "./components/reels/Search";
+import Layout from "./components/Layout";
 function App() {
   
 
@@ -14,7 +16,7 @@ function App() {
       <Route path="/login" element={<Login/>}/>
 
 
-
+<Route element={<Layout/>}>
 
      {/* // Customer Routes */}
   <Route
@@ -25,7 +27,7 @@ function App() {
       </ProtectedRoutes>
     }
   />
-
+ <Route path="/search" element={<Search />} />
   {/* Restaurant Routes */}
   <Route
     path="/dashboard"
@@ -35,7 +37,7 @@ function App() {
       </ProtectedRoutes>
     }
   />
-
+</Route>
 
     </Routes>
     </BrowserRouter>
