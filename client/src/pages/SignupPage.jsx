@@ -1,15 +1,27 @@
 import { useState } from "react";
 import { signupUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
+import { motion } from "framer-motion";
 import TextField from "@mui/material/TextField";
-import FoodPanda from "../assets/FoodPanda.jfif";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { useAuth } from "../context/AuthContext";
+import FoodPanda from "../assets/FoodPanda.jfif";
+
+
+const darkInputStyles = {
+  input: { color: 'white' },
+  label: { color: '#9ca3af' }, 
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' },
+    '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+    '&.Mui-focused fieldset': { borderColor: '#f97316' }, 
+  },
+  '& .MuiInputLabel-root.Mui-focused': { color: '#f97316' },
+};
 
 function Signup() {
   const navigate = useNavigate();
@@ -54,26 +66,41 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-     
-      <div className="bg-white rounded-3xl shadow-2xl flex w-full max-w-5xl overflow-hidden border border-gray-100 md:max-h-[85vh]">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-950 p-4 relative overflow-hidden font-sans selection:bg-orange-500/30">
+      
+      
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-orange-500/20 rounded-full blur-[120px] mix-blend-screen animate-pulse pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-red-600/20 rounded-full blur-[120px] mix-blend-screen animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
+
+      <motion.div 
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="bg-neutral-900/80 backdrop-blur-xl rounded-[2.5rem] shadow-2xl flex w-full max-w-5xl overflow-hidden border border-white/10 relative z-10 md:max-h-[85vh]"
+      >
         
         
-        <div className="w-full md:w-1/2 p-6 sm:p-10 flex flex-col justify-center overflow-y-auto">
-          <div className="mb-6 text-center md:text-left">
-            <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Bitezy.</h1>
-            <p className="text-gray-500">Create an account to start ordering.</p>
+        <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-center overflow-y-auto hide-scrollbar">
+          <div className="mb-8 text-center md:text-left">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
+              onClick={() => navigate('/')} 
+              className="text-4xl font-extrabold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent cursor-pointer inline-block mb-2"
+            >
+              Bitezy.
+            </motion.div>
+            <p className="text-gray-400">Create an account to start your journey.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <TextField
               label="Full Name"
               name="name"
               value={form.name}
               onChange={handleChange}
-              color="error"
               fullWidth
               required
+              sx={darkInputStyles}
             />
 
             <TextField
@@ -82,9 +109,9 @@ function Signup() {
               type="email"
               value={form.email}
               onChange={handleChange}
-              color="error"
               fullWidth
               required
+              sx={darkInputStyles}
             />
 
             <TextField
@@ -93,57 +120,77 @@ function Signup() {
               type="password"
               value={form.password}
               onChange={handleChange}
-              color="error"
               fullWidth
               required
+              sx={darkInputStyles}
             />
 
-            <FormControl className="mt-1">
-              <FormLabel color="error" className="font-semibold text-gray-700">Account Type</FormLabel>
+            <FormControl className="mt-2">
+              <FormLabel sx={{ color: '#9ca3af', '&.Mui-focused': { color: '#f97316' } }} className="font-semibold mb-1">
+                Account Type
+              </FormLabel>
               <RadioGroup row name="role" value={form.role} onChange={handleChange}>
-                <FormControlLabel value="customer" control={<Radio color="error" />} label="Hungry Customer" />
-                <FormControlLabel value="restaurant" control={<Radio color="error" />} label="Restaurant Owner" />
+                <FormControlLabel 
+                  value="customer" 
+                  control={<Radio sx={{ color: 'rgba(255,255,255,0.3)', '&.Mui-checked': { color: '#f97316' } }} />} 
+                  label={<span className="text-gray-300">Hungry Customer</span>} 
+                />
+                <FormControlLabel 
+                  value="restaurant" 
+                  control={<Radio sx={{ color: 'rgba(255,255,255,0.3)', '&.Mui-checked': { color: '#f97316' } }} />} 
+                  label={<span className="text-gray-300">Restaurant Owner</span>} 
+                />
               </RadioGroup>
             </FormControl>
 
-            <Button 
+            <button 
               type="submit" 
-              variant="contained" 
-              color="error" 
-              size="large"
-              sx={{ borderRadius: "25px", padding: "12px", fontWeight: "bold", mt: 1 }}
-              disableElevation
+              className="mt-4 w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 rounded-full font-bold text-lg hover:scale-[1.02] shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_25px_rgba(249,115,22,0.5)] transition-all"
             >
               Sign Up
-            </Button>
+            </button>
           </form>
 
-          <p className="text-center mt-6 text-gray-600">
+          <p className="text-center mt-8 text-gray-400">
             Already have an account?{" "}
             <span 
               onClick={() => navigate("/login")} 
-              className="text-red-500 font-bold cursor-pointer hover:underline transition-all"
+              className="text-orange-500 font-bold cursor-pointer hover:text-orange-400 hover:underline transition-all"
             >
               Log In
             </span>
           </p>
         </div>
 
-       
-        <div className="hidden md:block md:w-1/2 relative bg-black">
+        
+        <div className="hidden md:block md:w-1/2 relative bg-neutral-950">
           <img
             src={FoodPanda}
             alt="Delicious Food"
-            className="w-full h-full object-cover opacity-90"
+            className="w-full h-full object-cover opacity-60 mix-blend-overlay"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-10">
-            <h2 className="text-white text-3xl font-bold leading-tight">
-              Discover local flavors,<br />delivered to your door.
-            </h2>
+         
+          <div className="absolute inset-0 bg-gradient-to-r from-neutral-900/90 via-transparent to-transparent z-10" />
+          
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end p-12 z-20">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+            >
+              <h2 className="text-white text-4xl font-extrabold leading-[1.1] mb-4">
+                Discover local <br/><span className="text-orange-500">flavors</span>,<br/>delivered to your door.
+              </h2>
+              <p className="text-gray-400 text-lg">Join thousands of foodies today.</p>
+            </motion.div>
           </div>
         </div>
 
-      </div>
+      </motion.div>
+
+      
+      <style dangerouslySetInnerHTML={{__html: `
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}} />
     </div>
   );
 }
