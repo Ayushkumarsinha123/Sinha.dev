@@ -1,7 +1,18 @@
 import { useState } from "react";
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
+// 🎨 Custom MUI Styles for Dark Theme (Same as Login/Signup!)
+const darkInputStyles = {
+  input: { color: 'white' },
+  label: { color: '#9ca3af' }, // gray-400
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' },
+    '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.3)' },
+    '&.Mui-focused fieldset': { borderColor: '#f97316' }, // orange-500
+  },
+  '& .MuiInputLabel-root.Mui-focused': { color: '#f97316' },
+};
 
 const UploadReelForm = () => {
   const [videoFile, setVideoFile] = useState(null);
@@ -60,6 +71,9 @@ const UploadReelForm = () => {
         setPreviewName("");
         setDescription("");
         setDishId("");
+        setTitle("");
+        setDishName("");
+        setPrice("");
       } else {
         alert("Upload failed: " + data.message);
       }
@@ -72,42 +86,39 @@ const UploadReelForm = () => {
   };
 
   return (
-    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
-      <h2 className="text-xl font-bold mb-6 text-gray-800">
-        Upload a New Reel
-      </h2>
-
-      <form onSubmit={handleUpload} className="flex flex-col gap-5">
-        <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:bg-gray-50 transition-colors">
+    <div className="w-full">
+      <form onSubmit={handleUpload} className="flex flex-col gap-6">
+        
+        {/* Dark Theme Drag & Drop Zone */}
+        <div className="border-2 border-dashed border-white/20 rounded-3xl p-8 text-center hover:bg-white/5 hover:border-orange-500/50 transition-all duration-300 group cursor-pointer relative overflow-hidden">
           <input
             type="file"
             accept="video/mp4,video/x-m4v,video/*"
             onChange={handleFileChange}
-            className="hidden"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             id="video-upload"
           />
-          <label
-            htmlFor="video-upload"
-            className="cursor-pointer flex flex-col items-center"
-          >
+          <div className="flex flex-col items-center justify-center pointer-events-none">
             <CloudUploadIcon
-              className="text-gray-400 mb-2"
-              sx={{ fontSize: 40 }}
+              className="text-gray-500 group-hover:text-orange-500 transition-colors duration-300 mb-3 drop-shadow-md"
+              sx={{ fontSize: 48 }}
             />
-            <span className="text-blue-600 font-semibold">
-              Click to select a video
+            <span className="text-orange-500 font-bold text-lg mb-1">
+              Click or drag to upload video
             </span>
-            <span className="text-gray-400 text-sm mt-1">
+            <span className="text-gray-500 text-sm">
               MP4 or WebM (Max 50MB)
             </span>
-          </label>
+          </div>
+          
           {previewName && (
-            <div className="mt-4 text-sm font-medium text-green-600 bg-green-50 py-2 px-4 rounded-full inline-block">
+            <div className="mt-4 text-sm font-bold text-green-400 bg-green-500/10 border border-green-500/20 py-2 px-4 rounded-full inline-block relative z-20 shadow-lg">
               ✓ {previewName}
             </div>
           )}
         </div>
 
+        {/* Form Fields */}
         <TextField
           label="Catchy Description"
           value={description}
@@ -117,6 +128,7 @@ const UploadReelForm = () => {
           fullWidth
           required
           placeholder="e.g., The cheese pull on our new deep dish! 🍕🤤"
+          sx={darkInputStyles}
         />
 
         <TextField
@@ -126,13 +138,16 @@ const UploadReelForm = () => {
           fullWidth
           required
           placeholder="Paste a valid MongoDB Dish Object ID here"
+          sx={darkInputStyles}
         />
+        
         <TextField
           label="Reel Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           fullWidth
           required
+          sx={darkInputStyles}
         />
 
         <TextField
@@ -141,6 +156,7 @@ const UploadReelForm = () => {
           onChange={(e) => setDishName(e.target.value)}
           fullWidth
           required
+          sx={darkInputStyles}
         />
 
         <TextField
@@ -150,21 +166,29 @@ const UploadReelForm = () => {
           onChange={(e) => setPrice(e.target.value)}
           fullWidth
           required
+          sx={darkInputStyles}
         />
 
-        <Button
+        {/* Glowing Gradient Button */}
+        <button
           type="submit"
-          variant="contained"
-          size="large"
           disabled={isUploading}
-          className="mt-4 h-12"
-          sx={{
-            backgroundColor: "#f97316",
-            "&:hover": { backgroundColor: "#ea580c" },
-          }}
+          className={`mt-2 w-full text-white py-4 rounded-full font-bold text-lg transition-all flex justify-center items-center gap-3 ${
+            isUploading 
+              ? "bg-white/10 text-gray-400 cursor-not-allowed border border-white/10" 
+              : "bg-gradient-to-r from-orange-500 to-red-500 hover:scale-[1.02] shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-95"
+          }`}
         >
-          {isUploading ? "Uploading to Cloudinary..." : "Publish Reel"}
-        </Button>
+          {isUploading ? (
+            <>
+              <svg className="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Uploading to Cloudinary...
+            </>
+          ) : "Publish Reel"}
+        </button>
       </form>
     </div>
   );
