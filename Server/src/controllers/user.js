@@ -1,5 +1,5 @@
 import { validateLength, validateEmail } from "../helper/validation.js";
-import User from "../models/user.js";
+import User from "../models/User.js";
 import { generateToken } from "../services/auth.js";
 import bcrypt from "bcrypt";
 
